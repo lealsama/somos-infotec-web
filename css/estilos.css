@@ -447,7 +447,13 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .propuestas__intro { display: none; }
   .portada h1 { font-size: clamp(2rem, 4.4vw, 4.8rem); margin: 10px 0 0; }
   .identidad > .mv { flex: none; }
-  .identidad > .objetivo { flex: 1; align-content: start; background: inherit; }
+  .identidad > .lema { padding-bottom: clamp(18px, 3svh, 36px); }
+  .identidad .mv__texto { margin-top: 12px; }
+  .identidad > .objetivo { flex: 1; align-content: stretch; background: inherit; }
+  .identidad .especificos, .identidad .especificos > .contenedor { display: flex; flex-direction: column; align-self: stretch; }
+  .identidad .especificos > .contenedor { flex: 1; }
+  .identidad .lista-objetivos { flex: 1; display: flex; flex-direction: column; }
+  .identidad .lista-objetivos > div { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
   .lema { background: var(--fondo-1); padding: 28px 0 16px; }
   .lema__texto, .titulo { font-size: 1.85rem; }
   .titulo::after { display: none; }
