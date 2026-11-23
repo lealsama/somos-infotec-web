@@ -440,10 +440,7 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
 /* En escritorio los capítulos comparten el espacio visible. */
 @media (min-width: 721px) {
   body { font-size: 1rem; }
-  html.presentacion, html.presentacion.snap-suave { scroll-snap-type: none; }
-  .pantalla { min-height: 0; }
   .contenedor, .barra .barra__fila { width: 100%; max-width: 1560px; padding-inline: 5%; }
-  .portada { min-height: clamp(270px, 22vw, 365px); }
   .portada__texto { grid-template-columns: 60% 40%; padding-block: 20px; }
   .portada__img { object-position: center 49%; }
   .portada__parrafo, .portada .botones, .propuestas__intro { display: none; }
@@ -458,7 +455,7 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .mv__texto { margin-top: 8px; }
   .objetivo, .presentacion #equipo {
     display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    align-items: start; gap: clamp(32px, 4vw, 80px);
+    align-content: center; align-items: start; gap: clamp(32px, 4vw, 80px);
     padding: 32px max(5%, calc((100% - 1404px) / 2));
   }
   .objetivo .contenedor, #equipo .contenedor { padding: 0; min-width: 0; }
