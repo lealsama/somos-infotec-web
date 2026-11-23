@@ -443,7 +443,7 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .contenedor, .barra .barra__fila { width: 100%; max-width: 1560px; padding-inline: 5%; }
   .portada__texto { grid-template-columns: 60% 40%; padding-block: 20px; }
   .portada__img { object-position: center 49%; }
-  .portada__parrafo, .portada .botones, .propuestas__intro { display: none; }
+  .propuestas__intro { display: none; }
   .portada h1 { font-size: clamp(2rem, 4.4vw, 4.8rem); margin: 10px 0 0; }
   .lema { background: var(--fondo-1); padding: 28px 0 16px; }
   .lema__texto, .titulo { font-size: 1.85rem; }
