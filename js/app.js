@@ -359,6 +359,27 @@
       return actual;
     }
 
+    function indiceParaGesto() {
+      // Si la animación ya llegó, se vuelve a medir desde la posición real
+      // (o si la página se movió por otra vía, como un enlace del menú).
+      if (destino !== null) {
+        const recorrido = yDestino - yInicio;
+        const avance = window.scrollY - yInicio;
+        const enCamino = avance * recorrido >= -3 && Math.abs(avance) <= Math.abs(recorrido) + 3;
+        if (!enCamino || Math.abs(window.scrollY - yDestino) < 3) destino = null;
+      }
+      return destino !== null ? destino : pantallaActual();
+    }
+    function deslizar(siguiente, posicion) {
+      const maximo = document.documentElement.scrollHeight - window.innerHeight;
+      const y = Math.max(0, Math.min(maximo, posicion));
+      destino = siguiente;
+      yInicio = window.scrollY;
+      yDestino = y;
+      window.scrollTo({ top: y, behavior: reducir.matches ? "auto" : "smooth" });
+      clearTimeout(soltar);
+      soltar = setTimeout(() => { destino = null; }, 1200);
+    }
     const vista = window.visualViewport;
     if (vista) {
       let gesto = null;
@@ -414,18 +435,19 @@
     window.addEventListener("touchstart", e => {
       toque = null;
       if (e.touches.length !== 1 || (vista && vista.scale > 1.02)) return;
-      const indice = pantallaActual();
+      const indice = indiceParaGesto();
       const rect = pantallas[indice].getBoundingClientRect();
       const dedo = e.touches[0];
       toque = { x: dedo.clientX, y: dedo.clientY, indice,
-        puedeBajar: rect.bottom <= window.innerHeight + 3,
-        puedeSubir: rect.top >= barra.offsetHeight - 3, tomado: false };
+        puedeBajar: destino !== null || rect.bottom <= window.innerHeight + 3,
+        puedeSubir: destino !== null || rect.top >= barra.offsetHeight - 3, tomado: false };
     }, { passive: true });
     window.addEventListener("touchmove", e => {
       if (!toque || e.touches.length !== 1 || !e.cancelable || (vista && vista.scale > 1.02)) return;
       if (toque.tomado) { e.preventDefault(); return; }
       const dy = toque.y - e.touches[0].clientY;
       const dx = toque.x - e.touches[0].clientX;
+      if (Math.max(Math.abs(dx), Math.abs(dy)) < 4) return;
       if (Math.abs(dx) >= Math.abs(dy) || !(dy > 0 ? toque.puedeBajar : toque.puedeSubir)) {
         toque = null;
         return;
@@ -437,7 +459,7 @@
       toque.tomado = true;
       const top = dy > 0 ? inicioDe(siguiente) : Math.max(inicioDe(siguiente),
         siguiente.getBoundingClientRect().bottom + window.scrollY - window.innerHeight);
-      window.scrollTo({ top, behavior: reducir.matches ? "instant" : "smooth" });
+      deslizar(toque.indice + Math.sign(dy), top);
     }, { passive: false });
     window.addEventListener("wheel", (e) => {
       if (!escritorio.matches || vista?.scale > 1.02 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
@@ -453,15 +475,7 @@
       const unidad = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1;
       impulso += Math.abs(e.deltaY) * unidad;
       if (impulso < 32) { e.preventDefault(); return; }
-      // Si la animación ya llegó, se vuelve a medir desde la posición real
-      // (o si la página se movió por otra vía, como un enlace del menú).
-      if (destino !== null) {
-        const recorrido = yDestino - yInicio;
-        const avance = window.scrollY - yInicio;
-        const enCamino = avance * recorrido >= -3 && Math.abs(avance) <= Math.abs(recorrido) + 3;
-        if (!enCamino || Math.abs(window.scrollY - yDestino) < 3) destino = null;
-      }
-      const i = destino !== null ? destino : pantallaActual();
+      const i = indiceParaGesto();
       const p = pantallas[i];
       const alto = window.innerHeight - barra.offsetHeight;
 
@@ -485,14 +499,7 @@
         // Al subir a una pantalla alta, se llega a su parte final
         y = sentido < 0 && q.offsetHeight > alto + 2 ? inicioDe(q) + q.offsetHeight - alto : inicioDe(q);
       }
-      const maximo = document.documentElement.scrollHeight - window.innerHeight;
-      y = Math.max(0, Math.min(maximo, y));
-      destino = siguiente;
-      yInicio = window.scrollY;
-      yDestino = y;
-      window.scrollTo({ top: y, behavior: reducir.matches ? "auto" : "smooth" });
-      clearTimeout(soltar);
-      soltar = setTimeout(() => { destino = null; }, 1200);
+      deslizar(siguiente, y);
     }, { passive: false });
 
     // Cada vez que entra una pantalla, su contenido llega difuminado:
