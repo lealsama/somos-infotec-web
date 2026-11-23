@@ -84,7 +84,7 @@
         fila.append(dt, dd);
         dl.appendChild(fila);
       });
-      if (celular.matches) abrir(0);
+      if (celular.matches) abrir(-1);
     }
 
     // Abre uno y cierra los demás (así la pantalla siempre entra completa)
@@ -308,7 +308,23 @@
      Aquí solo se mide la barra y el pie, y se activa la animación de entrada. */
   function iniciarPantallas() {
     const raiz = document.documentElement;
-    const pantallas = Array.from($("contenido").children);
+    const main = $("contenido");
+    const originales = Array.from(main.children);
+    const celular = window.matchMedia("(max-width: 720px)");
+    const pares = [
+      [main.querySelector(".objetivo"), main.querySelector(".especificos")],
+      [$("equipo"), main.querySelector(".fichas-equipo")]
+    ];
+    let pantallas;
+    function agrupar() {
+      for (const [primera, segunda] of pares) {
+        if (celular.matches) primera.append(segunda);
+        else primera.after(segunda);
+      }
+      pantallas = Array.from(main.children);
+      originales.forEach(p => p.classList.toggle("pantalla", p.parentElement === main));
+    }
+    agrupar();
     const barra = document.querySelector(".barra");
     const pie = document.querySelector(".pie");
 
@@ -322,14 +338,13 @@
       const hayAltas = pantallas.some((p) => p.offsetHeight > alto + 4);
       raiz.classList.toggle("snap-suave", tactil.matches && hayAltas);
     }
-    pantallas.forEach((p) => p.classList.add("pantalla"));
     raiz.classList.add("presentacion");
     medir();
     if ("ResizeObserver" in window) {
       const medidas = new ResizeObserver(medir);
       medidas.observe(barra);
       medidas.observe(pie);
-      pantallas.forEach((p) => medidas.observe(p));
+      originales.forEach((p) => medidas.observe(p));
     }
 
     window.addEventListener("resize", medir);
@@ -442,6 +457,12 @@
       if (!pendiente) { pendiente = true; requestAnimationFrame(revisarPantallas); }
     }, { passive: true });
     window.addEventListener("resize", revisarPantallas);
+    celular.addEventListener("change", () => {
+      destino = null;
+      agrupar();
+      medir();
+      revisarPantallas();
+    });
     revisarPantallas();
   }
 
