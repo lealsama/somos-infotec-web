@@ -393,15 +393,17 @@
         const inicio = Math.max(0, bordes[i] - margen);
         const fin = Math.max(inicio, bordes[i] + paneles[i].offsetHeight - vista.height);
         const dedo = e.touches[0];
-        gesto = { x: dedo.clientX, y: dedo.clientY, origen: vista.pageTop, inicio, fin,
+        // La coordenada de pantalla no cambia al desplazar la ventana ampliada.
+        gesto = { x: dedo.screenX, y: dedo.screenY, escala: vista.scale, origen: vista.pageTop, inicio, fin,
           abajo: i < paneles.length - 1 && vista.pageTop >= fin - 3 ? bordes[i + 1] - margen : null,
           arriba: i > 0 && vista.pageTop <= inicio + 3 ? Math.max(bordes[i - 1] - margen, bordes[i] - vista.height) : null,
           eje: null, cambio: false };
       }, { passive: true });
       window.addEventListener("touchmove", e => {
         if (!gesto || !e.cancelable || e.touches.length !== 1) return;
-        const dx = gesto.x - e.touches[0].clientX;
-        const dy = gesto.y - e.touches[0].clientY;
+        const dx = (gesto.x - e.touches[0].screenX) / gesto.escala;
+        const dy = (gesto.y - e.touches[0].screenY) / gesto.escala;
+        if (!gesto.eje && Math.max(Math.abs(dx), Math.abs(dy)) < 3) return;
         if (!gesto.eje) gesto.eje = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
         if (gesto.eje === "x") return;
         e.preventDefault();

@@ -234,7 +234,9 @@ html.presentacion { scroll-padding-top: var(--alto-barra, 72px); }
 html.presentacion { scroll-snap-type: y mandatory; }
 html.presentacion.snap-suave { scroll-snap-type: y proximity; }
 html.presentacion.con-zoom { scroll-snap-type: none; scroll-behavior: auto; }
-.con-zoom body { touch-action: pan-x pinch-zoom; }
+html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
+  touch-action: pan-x pinch-zoom;
+}
 /* Ventana muy baja (por ejemplo, celular acostado): se acomoda sin forzar */
 @media (max-height: 459px) {
   html.presentacion { scroll-snap-type: y proximity; }
