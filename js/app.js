@@ -209,8 +209,9 @@
       $("detalle-paso").textContent = p.primerPaso;
       $("detalle").setAttribute("aria-labelledby", botones[i].id);
       if (enfocar) {
-        botones[i].focus();
-        botones[i].scrollIntoView({ block: "nearest", inline: "nearest", behavior: moverSuave });
+        botones[i].focus({ preventScroll: true });
+        const diferencia = botones[i].getBoundingClientRect().left - lista.getBoundingClientRect().left;
+        lista.scrollBy({ left: diferencia, behavior: moverSuave });
       }
     }
 
@@ -300,10 +301,7 @@
   }
 
   /* ---------- 6. Modo presentación (desplazamiento por pantallas) ----------
-     El "salto" entre pantallas lo hace el navegador con CSS (scroll-snap),
-     no JavaScript. Así funciona igual con rueda, panel táctil, dedo y teclado,
-     sin bloquear el desplazamiento ni trabarse.
-     Aquí solo se mide la barra y el pie, y se activa la animación de entrada. */
+     Los gestos verticales controlan el avance. El observador activa el efecto de entrada. */
   function iniciarPantallas() {
     const raiz = document.documentElement;
     const main = $("contenido");
@@ -324,15 +322,9 @@
     const barra = document.querySelector(".barra");
     const pie = document.querySelector(".pie");
 
-    // En pantallas táctiles, si alguna pantalla no entra completa (celulares
-    // chicos), el ajuste pasa a "suave" para que el dedo nunca quede trabado.
-    const tactil = window.matchMedia("(max-width: 720px), (pointer: coarse)");
     function medir() {
       raiz.style.setProperty("--alto-barra", barra.offsetHeight + "px");
       raiz.style.setProperty("--alto-pie", pie.offsetHeight + "px");
-      const alto = window.innerHeight - barra.offsetHeight;
-      const hayAltas = pantallas.some((p) => p.offsetHeight > alto + 4);
-      raiz.classList.toggle("snap-suave", tactil.matches && hayAltas);
     }
     raiz.classList.add("presentacion");
     medir();
@@ -340,10 +332,10 @@
       const medidas = new ResizeObserver(medir);
       medidas.observe(barra);
       medidas.observe(pie);
-      originales.forEach((p) => medidas.observe(p));
+
     }
 
-    window.addEventListener("resize", medir);
+
 
     // Rueda del mouse / touchpad en computadora: cada gesto = una pantalla.
     // Se recuerda la pantalla de destino, así un gesto nuevo durante la
@@ -356,6 +348,8 @@
     let ultimaRueda = 0;
     let sentidoAnterior = 0;
     let soltar;
+    let impulso = 0;
+    let consumido = false;
 
     function inicioDe(p) { return p.getBoundingClientRect().top + window.scrollY - barra.offsetHeight; }
     function pantallaActual() {
@@ -448,6 +442,17 @@
     window.addEventListener("wheel", (e) => {
       if (!escritorio.matches || vista?.scale > 1.02 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       const sentido = Math.sign(e.deltaY);
+      const ahora = performance.now();
+      if (ahora - ultimaRueda > 220 || sentido !== sentidoAnterior) {
+        impulso = 0;
+        consumido = false;
+      }
+      ultimaRueda = ahora;
+      sentidoAnterior = sentido;
+      if (consumido) { e.preventDefault(); return; }
+      const unidad = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1;
+      impulso += Math.abs(e.deltaY) * unidad;
+      if (impulso < 32) { e.preventDefault(); return; }
       // Si la animación ya llegó, se vuelve a medir desde la posición real
       // (o si la página se movió por otra vía, como un enlace del menú).
       if (destino !== null) {
@@ -464,12 +469,7 @@
       if (sentido > 0 && i === pantallas.length - 1 && destino === null) return;
 
       e.preventDefault();
-      const ahora = performance.now();
-      const gestoNuevo = ahora - ultimaRueda > 200 || sentido !== sentidoAnterior;
-      ultimaRueda = ahora;
-      sentidoAnterior = sentido;
-      if (!gestoNuevo) return; // la inercia del touchpad cuenta como el mismo gesto
-
+      consumido = true;
       let siguiente = i;
       let y;
       const r = p.getBoundingClientRect();

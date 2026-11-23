@@ -228,18 +228,10 @@ a { color: inherit; }
    ========================================================== */
 html.presentacion { scroll-padding-top: var(--alto-barra, 72px); }
 
-/* Computadora y celular: cada gesto lleva a la pantalla siguiente */
-html.presentacion { scroll-snap-type: y mandatory; }
-html.presentacion.snap-suave { scroll-snap-type: y proximity; }
 html.presentacion.con-zoom { scroll-snap-type: none; scroll-behavior: auto; }
 html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   touch-action: pan-x pinch-zoom;
 }
-/* Ventana muy baja (por ejemplo, celular acostado): se acomoda sin forzar */
-@media (max-height: 459px) {
-  html.presentacion { scroll-snap-type: y proximity; }
-}
-
 .pantalla {
   scroll-snap-stop: always;
   scroll-snap-align: start;
