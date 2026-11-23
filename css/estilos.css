@@ -233,6 +233,8 @@ html.presentacion { scroll-padding-top: var(--alto-barra, 72px); }
 /* Computadora y celular: cada gesto lleva a la pantalla siguiente */
 html.presentacion { scroll-snap-type: y mandatory; }
 html.presentacion.snap-suave { scroll-snap-type: y proximity; }
+html.presentacion.con-zoom { scroll-snap-type: none; scroll-behavior: auto; }
+.con-zoom body { touch-action: pan-x pinch-zoom; }
 /* Ventana muy baja (por ejemplo, celular acostado): se acomoda sin forzar */
 @media (max-height: 459px) {
   html.presentacion { scroll-snap-type: y proximity; }
@@ -396,7 +398,7 @@ html.presentacion.snap-suave { scroll-snap-type: y proximity; }
 
 @media (max-width: 720px) {
   .presentacion #equipo, .presentacion .objetivo { padding-block: 14px; }
-  .objetivo .especificos { padding: 14px 0 0; background: inherit; }
+  .objetivo .especificos { padding: 26px 0 0; background: inherit; }
   .objetivo .objetivo__texto { margin-top: 9px; font-size: 1rem; line-height: 1.4; }
   .objetivo .objetivo-item__boton { padding-block: 6px; min-height: 44px; }
   .objetivo .lista-objetivos.acordeon dd { padding-bottom: 8px; }
@@ -411,7 +413,7 @@ html.presentacion.snap-suave { scroll-snap-type: y proximity; }
   .objetivo .titulo { font-size: 1.25rem; }
   .objetivo .titulo::after { margin-top: 4px; }
   .objetivo .objetivo__texto { font-size: .94rem; margin-top: 6px; }
-  .objetivo .especificos { padding-top: 8px; }
+  .objetivo .especificos { padding-top: 16px; }
 }
 
 /* ==========================================================

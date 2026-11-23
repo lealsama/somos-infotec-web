@@ -369,8 +369,55 @@
       return actual;
     }
 
+    const vista = window.visualViewport;
+    if (vista) {
+      let gesto = null;
+      function ajustarZoom() {
+        raiz.classList.toggle("con-zoom", vista.scale > 1.02);
+        if (vista.scale <= 1.02) gesto = null;
+      }
+      vista.addEventListener("resize", ajustarZoom);
+      ajustarZoom();
+
+      // Trabajar en coordenadas de la ventana visible, que al ampliar es menor
+      // que la ventana de diseño. El límite se fija al comenzar cada gesto.
+      window.addEventListener("touchstart", e => {
+        gesto = null;
+        if (vista.scale <= 1.02 || e.touches.length !== 1) return;
+        const superior = vista.pageTop + Math.max(0, barra.offsetHeight - vista.offsetTop);
+        const centro = (superior + vista.pageTop + vista.height) / 2;
+        const paneles = [...pantallas, pie];
+        const bordes = paneles.map(p => p.getBoundingClientRect().top + window.scrollY);
+        const i = Math.max(0, bordes.findLastIndex(y => y <= centro));
+        const margen = superior - vista.pageTop;
+        const inicio = Math.max(0, bordes[i] - margen);
+        const fin = Math.max(inicio, bordes[i] + paneles[i].offsetHeight - vista.height);
+        const dedo = e.touches[0];
+        gesto = { x: dedo.clientX, y: dedo.clientY, origen: vista.pageTop, inicio, fin,
+          abajo: i < paneles.length - 1 && vista.pageTop >= fin - 3 ? bordes[i + 1] - margen : null,
+          arriba: i > 0 && vista.pageTop <= inicio + 3 ? Math.max(bordes[i - 1] - margen, bordes[i] - vista.height) : null,
+          eje: null, cambio: false };
+      }, { passive: true });
+      window.addEventListener("touchmove", e => {
+        if (!gesto || !e.cancelable || e.touches.length !== 1) return;
+        const dx = gesto.x - e.touches[0].clientX;
+        const dy = gesto.y - e.touches[0].clientY;
+        if (!gesto.eje) gesto.eje = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        if (gesto.eje === "x") return;
+        e.preventDefault();
+        if (gesto.cambio) return;
+        const salto = dy > 18 ? gesto.abajo : dy < -18 ? gesto.arriba : null;
+        gesto.cambio = salto !== null;
+        const y = gesto.cambio ? salto : Math.max(gesto.inicio, Math.min(gesto.fin, gesto.origen + dy));
+        // scrollBy conserva el desplazamiento horizontal al leer con zoom.
+        window.scrollBy({ top: y - vista.pageTop, behavior: gesto.cambio && !reducir.matches ? "smooth" : "instant" });
+      }, { passive: false });
+      window.addEventListener("touchend", () => { gesto = null; }, { passive: true });
+      window.addEventListener("touchcancel", () => { gesto = null; }, { passive: true });
+    }
+
     window.addEventListener("wheel", (e) => {
-      if (!escritorio.matches || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (!escritorio.matches || vista?.scale > 1.02 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       const sentido = Math.sign(e.deltaY);
       // Si la animación ya llegó, se vuelve a medir desde la posición real
       // (o si la página se movió por otra vía, como un enlace del menú).
