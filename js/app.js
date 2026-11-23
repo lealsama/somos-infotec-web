@@ -37,8 +37,6 @@
 
     $("mision").textContent = datos.mision;
     $("vision").textContent = datos.vision;
-    $("aviso-mision").hidden = !datos.misionVisionEnRevision;
-    $("aviso-vision").hidden = !datos.misionVisionEnRevision;
 
     $("objetivo-general").textContent = datos.objetivoGeneral;
     iniciarObjetivos();
@@ -122,7 +120,7 @@
       } else {
         marco.innerHTML = SILUETA; // ícono fijo, no viene de los datos
         marco.setAttribute("role", "img");
-        marco.setAttribute("aria-label", "Foto pendiente de " + p.nombre);
+        marco.setAttribute("aria-label", "Perfil de " + p.nombre);
       }
       li.append(marco, crear("h3", "", p.nombre), crear("p", "", p.cargo));
       pista.appendChild(li);
