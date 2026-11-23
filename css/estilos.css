@@ -479,7 +479,8 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .fichas-equipo .titulo { display: none; }
   .fichas-equipo .recorrido-equipo, .carrusel { margin: 0; }
   .integrante { flex-basis: max(118px, calc((100% - 54px) / 4.4)); }
-  .propuestas { padding: 30px 0 12px; }
+  .propuestas { padding: 24px 0 clamp(40px, 8svh, 88px); }
+  .propuestas .detalle { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .pestanas { margin-top: 16px; gap: 8px; }
   .pestana { min-height: 0; padding: 12px; }
   .pestana__num { display: none; }
