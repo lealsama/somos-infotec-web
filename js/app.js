@@ -416,6 +416,37 @@
       window.addEventListener("touchcancel", () => { gesto = null; }, { passive: true });
     }
 
+    // Un deslizamiento vertical desde el borde avanza exactamente una sección.
+    // Dentro de secciones altas, carruseles o al ampliar, se respeta el gesto propio.
+    let toque = null;
+    window.addEventListener("touchstart", e => {
+      toque = null;
+      if (e.touches.length !== 1 || (vista && vista.scale > 1.02)) return;
+      const indice = pantallaActual();
+      const rect = pantallas[indice].getBoundingClientRect();
+      const dedo = e.touches[0];
+      toque = { x: dedo.clientX, y: dedo.clientY, indice,
+        puedeBajar: rect.bottom <= window.innerHeight + 3,
+        puedeSubir: rect.top >= barra.offsetHeight - 3, tomado: false };
+    }, { passive: true });
+    window.addEventListener("touchmove", e => {
+      if (!toque || e.touches.length !== 1 || !e.cancelable || (vista && vista.scale > 1.02)) return;
+      if (toque.tomado) { e.preventDefault(); return; }
+      const dy = toque.y - e.touches[0].clientY;
+      const dx = toque.x - e.touches[0].clientX;
+      if (Math.abs(dx) >= Math.abs(dy) || !(dy > 0 ? toque.puedeBajar : toque.puedeSubir)) {
+        toque = null;
+        return;
+      }
+      const siguiente = pantallas[toque.indice + Math.sign(dy)];
+      if (!siguiente) return;
+      e.preventDefault();
+      if (Math.abs(dy) < 32) return;
+      toque.tomado = true;
+      const top = dy > 0 ? inicioDe(siguiente) : Math.max(inicioDe(siguiente),
+        siguiente.getBoundingClientRect().bottom + window.scrollY - window.innerHeight);
+      window.scrollTo({ top, behavior: reducir.matches ? "instant" : "smooth" });
+    }, { passive: false });
     window.addEventListener("wheel", (e) => {
       if (!escritorio.matches || vista?.scale > 1.02 || e.ctrlKey || !e.deltaY || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       const sentido = Math.sign(e.deltaY);
@@ -473,37 +504,20 @@
     // se repite siempre, también al ir y volver entre dos pantallas.
     let ultimaY = window.scrollY;
     let sentidoScroll = 1;   // 1 = bajando, -1 = subiendo
-    let pendiente = false;
-
-    function revisarPantallas() {
-      pendiente = false;
-      const arriba = barra.offsetHeight;
-      const altoVista = window.innerHeight - arriba;
-      pantallas.forEach((p) => {
-        const r = p.getBoundingClientRect();
-        const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, arriba);
-        if (visible > altoVista * 0.12) {
-          if (!p.classList.contains("visible")) {
-            // Se coloca el contenido en su punto de partida (arriba o abajo)
-            // sin animar ese salto, y recién después empieza la animación.
-            p.classList.add("sin-transicion");
-            p.dataset.desde = sentidoScroll > 0 ? "abajo" : "arriba";
-            void p.offsetHeight;
-            p.classList.remove("sin-transicion");
-            p.classList.add("visible");
-          }
-        } else if (visible <= 1) {
-          p.classList.remove("visible");
-        }
-      });
-    }
-    window.addEventListener("scroll", () => {
+    const observador = new IntersectionObserver(entradas => {
       const y = window.scrollY;
       if (y !== ultimaY) sentidoScroll = y > ultimaY ? 1 : -1;
       ultimaY = y;
-      if (!pendiente) { pendiente = true; requestAnimationFrame(revisarPantallas); }
-    }, { passive: true });
-    window.addEventListener("resize", revisarPantallas);
+      for (const entrada of entradas) {
+        const panel = entrada.target;
+        if (entrada.isIntersecting) panel.dataset.desde = sentidoScroll > 0 ? "abajo" : "arriba";
+        panel.classList.toggle("visible", entrada.isIntersecting);
+      }
+    });
+    function revisarPantallas() {
+      observador.disconnect();
+      pantallas.forEach(panel => observador.observe(panel));
+    }
     celular.addEventListener("change", () => {
       destino = null;
       agrupar();
