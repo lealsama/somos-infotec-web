@@ -316,8 +316,8 @@
     let pantallas;
     function agrupar() {
       for (const [primera, segunda] of pares) {
-        if (celular.matches) primera.append(segunda);
-        else primera.after(segunda);
+        primera.append(segunda);
+
       }
       pantallas = Array.from(main.children);
       originales.forEach(p => p.classList.toggle("pantalla", p.parentElement === main));

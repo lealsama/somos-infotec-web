@@ -436,3 +436,51 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
 /* Barra superior: el logo "Somos Infotec" va pegado a la izquierda
    y el menú a la derecha, usando todo el ancho de la pantalla */
 .barra .barra__fila { max-width: none; padding-left: clamp(18px, 3vw, 56px); padding-right: clamp(18px, 3vw, 56px); }
+
+/* En escritorio los capítulos comparten el espacio visible. */
+@media (min-width: 721px) {
+  body { font-size: 1rem; }
+  html.presentacion, html.presentacion.snap-suave { scroll-snap-type: none; }
+  .pantalla { min-height: 0; }
+  .contenedor, .barra .barra__fila { width: 100%; max-width: 1560px; padding-inline: 5%; }
+  .portada { min-height: clamp(270px, 22vw, 365px); }
+  .portada__texto { grid-template-columns: 60% 40%; padding-block: 20px; }
+  .portada__img { object-position: center 49%; }
+  .portada__parrafo, .portada .botones, .propuestas__intro { display: none; }
+  .portada h1 { font-size: clamp(2rem, 4.4vw, 4.8rem); margin: 10px 0 0; }
+  .lema { background: var(--fondo-1); padding: 28px 0 16px; }
+  .lema__texto, .titulo { font-size: 1.85rem; }
+  .titulo::after { display: none; }
+  .mv { padding: 0 0 30px; }
+  .mv__grid { gap: 32px; }
+  .mv__col2 { border: 0; padding: 0; }
+  .mv .titulo { font-size: 1.35rem; color: var(--lima); }
+  .mv__texto { margin-top: 8px; }
+  .objetivo, .presentacion #equipo {
+    display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: start; gap: clamp(32px, 4vw, 80px);
+    padding: 32px max(5%, calc((100% - 1404px) / 2));
+  }
+  .objetivo .contenedor, #equipo .contenedor { padding: 0; min-width: 0; }
+  .especificos, .fichas-equipo { padding: 0; background: transparent; min-width: 0; }
+  .objetivo__texto { font-size: 1rem; }
+  .lista-objetivos { margin-top: 16px; }
+  .lista-objetivos > div { display: block; padding: 8px 0; border-top: 1px solid var(--linea); border-bottom: 0; }
+  .lista-objetivos dd { font-size: .92rem; }
+  .presentacion #equipo { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 32px; }
+  .presentacion .equipo .foto-grupal { height: auto; width: 100%; margin-top: 16px; }
+  .fichas-equipo { padding-top: calc(2.13rem + 16px); }
+  .fichas-equipo .titulo { display: none; }
+  .fichas-equipo .recorrido-equipo, .carrusel { margin: 0; }
+  .integrante { flex-basis: max(118px, calc((100% - 54px) / 4.4)); }
+  .propuestas { padding: 30px 0 12px; }
+  .pestanas { margin-top: 16px; gap: 8px; }
+  .pestana { min-height: 0; padding: 12px; }
+  .pestana__num { display: none; }
+  .pestana__nombre { margin: 0; }
+  .pestana[aria-selected="true"] { background: var(--lima); color: #0a2530; }
+  .pestana[aria-selected="true"] .pestana__area { color: inherit; }
+  .detalle, .muestra { padding: 18px; }
+  .cierre > .contenedor { padding-block: 0 28px; }
+  .cierre > .compartir { padding-block: 24px; }
+}
