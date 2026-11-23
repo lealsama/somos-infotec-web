@@ -446,6 +446,8 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .portada__img { object-position: center 49%; }
   .propuestas__intro { display: none; }
   .portada h1 { font-size: clamp(2rem, 4.4vw, 4.8rem); margin: 10px 0 0; }
+  .identidad > .mv { flex: none; }
+  .identidad > .objetivo { flex: 1; align-content: start; }
   .lema { background: var(--fondo-1); padding: 28px 0 16px; }
   .lema__texto, .titulo { font-size: 1.85rem; }
   .titulo::after { display: none; }

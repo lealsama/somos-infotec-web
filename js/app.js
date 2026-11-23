@@ -309,16 +309,14 @@
     const main = $("contenido");
     const originales = Array.from(main.children);
     const celular = window.matchMedia("(max-width: 720px)");
-    const pares = [
-      [main.querySelector(".objetivo"), main.querySelector(".especificos")],
-      [$("equipo"), main.querySelector(".fichas-equipo")]
-    ];
+    const identidad = $("proposito");
+    const objetivo = main.querySelector(".objetivo");
+    objetivo.append(main.querySelector(".especificos"));
+    $("equipo").append(main.querySelector(".fichas-equipo"));
     let pantallas;
     function agrupar() {
-      for (const [primera, segunda] of pares) {
-        primera.append(segunda);
-
-      }
+      if (celular.matches) identidad.after(objetivo);
+      else identidad.append(objetivo);
       pantallas = Array.from(main.children);
       originales.forEach(p => p.classList.toggle("pantalla", p.parentElement === main));
     }
