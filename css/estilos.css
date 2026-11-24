@@ -13,7 +13,6 @@
   --tarjeta: #14404c;
   --tarjeta-activa: #263d49;
   --paso: #1b2a34;
-  --muestra: #1d5060;
   --lima: #c8d92b;
   --cian: #4fd8c8;
   --texto: #eef4f5;
@@ -158,13 +157,8 @@ a { color: inherit; }
 .detalle__paso { background: var(--paso); border-radius: 10px; padding: 16px 18px; }
 .detalle__paso-titulo { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #fff !important; margin-bottom: 4px; }
 
-.muestra { margin-top: 30px; background: var(--muestra); border-left: 6px solid var(--lima); border-radius: var(--radio); padding: 26px 30px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.muestra h3 { font-size: 1.4rem; margin-bottom: 8px; }
-.muestra p { color: #d4e6ea; max-width: 62ch; }
-.chip { background: var(--lima); color: #0a2530; font-weight: 700; font-size: .78rem; padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
-
 /* ---------- Compartir ---------- */
-.compartir { background: var(--fondo-1); padding: 56px 0; }
+.compartir { margin-top: 24px; padding: 20px 0; border-top: 1px solid var(--linea); }
 .compartir__fila { display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap; }
 .compartir__titulo { font-size: 1.6rem; margin-bottom: 6px; }
 .compartir p { color: var(--suave); }
@@ -218,7 +212,6 @@ a { color: inherit; }
   .pestanas::-webkit-scrollbar { display: none; }
   .pestana { flex: 0 0 160px; scroll-snap-align: start; }
   .detalle { grid-template-columns: 1fr; padding: 22px; gap: 18px; }
-  .muestra { flex-direction: column; align-items: flex-start; padding: 22px; }
   .compartir__acciones .boton { flex: 1 1 auto; }
 }
 
@@ -258,12 +251,6 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
 
 /* Pantalla de fichas de integrantes */
 .fichas-equipo .recorrido-equipo { margin-top: 4px; }
-
-/* Última pantalla: muestra + compartir */
-.cierre { background: var(--fondo-prop); }
-.cierre > .contenedor { flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; padding-top: 48px; padding-bottom: 48px; }
-.cierre .muestra { margin-top: 0; }
-.cierre > .compartir { padding: 40px 0; }
 
 /* Animación de entrada: solo opacidad y desplazamiento (muy livianos).
    Se desactiva si la persona pidió reducir el movimiento. */
@@ -374,10 +361,6 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .detalle__paso { padding: 12px 14px; }
 
   /* Última pantalla */
-  .cierre > .contenedor { padding-top: 28px; padding-bottom: 24px; }
-  .muestra { padding: 18px; }
-  .muestra h3 { font-size: 1.2rem; }
-  .cierre > .compartir { padding: 24px 0; }
   .compartir__titulo { font-size: 1.35rem; }
 }
 
@@ -479,9 +462,7 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .pestana__nombre { margin: 0; }
   .pestana[aria-selected="true"] { background: var(--lima); color: #0a2530; }
   .pestana[aria-selected="true"] .pestana__area { color: inherit; }
-  .detalle, .muestra { padding: 18px; }
-  .cierre > .contenedor { padding-block: 0 28px; }
-  .cierre > .compartir { padding-block: 24px; }
+  .detalle { padding: 18px; }
 }
 
 .propuestas__flechas { display: none; }

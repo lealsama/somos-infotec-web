@@ -84,12 +84,6 @@ window.CONTENIDO = {
     }
   ],
 
-  muestra: {
-    titulo: "Muestra de proyectos entre escuelas",
-    texto: "Invitar a equipos de Infotecnología y de otras escuelas de la UJCV a mostrar sus proyectos en vivo, explicar qué problema resuelven y responder preguntas.",
-    etiqueta: "Propuesta destacada"
-  },
-
   compartir: {
     titulo: "Compartí la propuesta",
     texto: "Copiá el enlace de esta página y compartilo con tus compañeros."

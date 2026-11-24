@@ -45,9 +45,6 @@
     $("foto-grupal").alt = datos.fotoGrupal.descripcion;
 
     $("propuestas-intro").textContent = datos.propuestasIntro;
-    $("muestra-titulo").textContent = datos.muestra.titulo;
-    $("muestra-texto").textContent = datos.muestra.texto;
-    $("muestra-etiqueta").textContent = datos.muestra.etiqueta;
 
     $("comp-titulo").textContent = datos.compartir.titulo;
     $("comp-texto").textContent = datos.compartir.texto;
