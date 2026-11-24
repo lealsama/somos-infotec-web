@@ -197,7 +197,9 @@
       return b;
     });
 
-    function elegir(i, enfocar) {
+    let seleccion = 0;
+    function elegir(i, enfocar = false, revelar = enfocar) {
+      seleccion = i;
       botones.forEach((b, j) => {
         const activo = i === j;
         b.setAttribute("aria-selected", String(activo));
@@ -208,8 +210,8 @@
       $("detalle-texto").textContent = p.descripcion;
       $("detalle-paso").textContent = p.primerPaso;
       $("detalle").setAttribute("aria-labelledby", botones[i].id);
-      if (enfocar) {
-        botones[i].focus({ preventScroll: true });
+      if (enfocar) botones[i].focus({ preventScroll: true });
+      if (revelar) {
         const diferencia = botones[i].getBoundingClientRect().left - lista.getBoundingClientRect().left;
         lista.scrollBy({ left: diferencia, behavior: moverSuave });
       }
@@ -226,6 +228,8 @@
       if (nuevo !== null) { e.preventDefault(); elegir(nuevo, true); }
     });
 
+    $("propuesta-anterior").addEventListener("click", () => elegir((seleccion - 1 + botones.length) % botones.length, false, true));
+    $("propuesta-siguiente").addEventListener("click", () => elegir((seleccion + 1) % botones.length, false, true));
     elegir(0);
   }
 

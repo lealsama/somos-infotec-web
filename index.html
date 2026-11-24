@@ -7,7 +7,7 @@
   <meta name="description" content="Somos Infotec: planilla de directiva estudiantil de Infotecnología, UJCV Campus Comayagua. Conocé al equipo y nuestras propuestas.">
   <meta name="theme-color" content="#0a2530">
   <link rel="icon" href="img/icono.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/estilos.css?v=gestos-9">
+  <link rel="stylesheet" href="css/estilos.css?v=flechas-11">
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -113,7 +113,13 @@
     <!-- PROPUESTAS -->
     <section id="propuestas" data-menu="propuestas" class="propuestas" aria-labelledby="prop-titulo">
       <div class="contenedor">
-        <h2 class="titulo" id="prop-titulo">Nuestras propuestas</h2>
+        <div class="propuestas__cabecera">
+          <h2 class="titulo" id="prop-titulo">Nuestras propuestas</h2>
+          <div class="propuestas__flechas">
+            <button type="button" class="flecha" id="propuesta-anterior" aria-label="Propuesta anterior" aria-controls="pestanas detalle">&#8592;</button>
+            <button type="button" class="flecha" id="propuesta-siguiente" aria-label="Propuesta siguiente" aria-controls="pestanas detalle">&#8594;</button>
+          </div>
+        </div>
         <p class="propuestas__intro" id="propuestas-intro"></p>
         <div class="pestanas" role="tablist" aria-label="Propuestas" id="pestanas"></div>
         <div class="detalle" role="tabpanel" id="detalle" tabindex="0">
@@ -161,6 +167,6 @@
   <noscript><p class="sin-js">Para ver el contenido completo, activá JavaScript en tu navegador.</p></noscript>
 
   <script src="js/contenido.js?v=diapositivas-2"></script>
-  <script src="js/app.js?v=alternar-10"></script>
+  <script src="js/app.js?v=flechas-11"></script>
 </body>
 </html>

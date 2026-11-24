@@ -483,3 +483,10 @@ html.con-zoom, .con-zoom body, .con-zoom :is(.carrusel__pista, .pestanas) {
   .cierre > .contenedor { padding-block: 0 28px; }
   .cierre > .compartir { padding-block: 24px; }
 }
+
+.propuestas__flechas { display: none; }
+@media (max-width: 720px) {
+  .propuestas__cabecera { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .propuestas__flechas { display: flex; gap: 6px; }
+  .propuestas__flechas .flecha { width: 44px; height: 44px; }
+}
